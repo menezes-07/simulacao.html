@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedOrganiza - Simulação ESP32</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f3f6fb;
+  color: #233047;
+}
+
+main {
+  max-width: 750px;
+  margin: auto;
+}
+
+header, section {
+  background: white;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px #0000000d;
+}
+
+h1 {
+  color: #2864c5;
+  margin-top: 0;
+}
+
+.status {
+  padding: 12px;
+  background: #fff4d8;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+}
+
+th, td {
+  padding: 10px 6px;
+  text-align: left;
+  border-bottom: 1px solid #e5eaf2;
+}
+
+th {
+  color: #52627a;
+  font-size: 13px;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 4px 2px;
+}
+
+.primary {
+  background: #2864c5;
+  color: white;
+}
+
+.secondary {
+  background: #e9eef7;
+  color: #233047;
+}
+
+#resultado {
+  white-space: pre-wrap;
+  background: #f3f6fb;
+  padding: 14px;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  font-size: 13px;
+  color: #63718a;
+}
+
+</style>
+</head>
+
+<body>
+<main>
+  <header>
+    <h1>💊 MedOrganiza</h1>
+    <p>Simulação de comunicação com o ESP32</p>
+
+    <div class="status" id="status">
+      🟡 Modo de simulação — ESP32 não conectado
+    </div>
+  </header>
+
+  <section>
+    <h2>Horários para envio</h2>
+    <p class="small">
+      Estes são dados fictícios de teste. Eles não alteram
+      o cadastro do seu site principal.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Medicamento</th>
+          <th>Horário</th>
+          <th>Dias</th>
+        </tr>
+      </thead>
+      <tbody id="tabela"></tbody>
+    </table>
+
+    <button class="primary" onclick="simularEnvio()">
+      Simular envio para o ESP32
+    </button>
+
+    <button class="secondary" onclick="limparTeste()">
+      Limpar teste
+    </button>
+  </section>
+
+  <section>
+    <h2>Resultado da simulação</h2>
+    <div id="resultado">
+      Aguardando teste...
+    </div>
+  </section>
+
+  <section>
+    <h2>Dados preparados</h2>
+    <p class="small">
+      Visualize os dados no formato JSON que poderá ser usado
+      futuramente na comunicação real.
+    </p>
+    <button class="secondary" onclick="mostrarJSON()">
+      Visualizar JSON
+    </button>
+    <pre id="json"></pre>
+  </section>
+</main>
+
+<script>
+const medicamentos = [
+  {
+    nome: "Medicamento de teste A",
+    horario: "08:00",
+    dias: "Todos os dias"
+  },
+  {
+    nome: "Medicamento de teste B",
+    horario: "20:00",
+    dias: "Todos os dias"
+  }
+];
+
+function carregarTabela() {
+  const tabela = document.getElementById("tabela");
+  tabela.innerHTML = "";
+
+  medicamentos.forEach(m => {
+    const linha = document.createElement("tr");
+
+    [m.nome, m.horario, m.dias].forEach(valor => {
+      const celula = document.createElement("td");
+      celula.textContent = valor;
+      linha.appendChild(celula);
+    });
+
+    tabela.appendChild(linha);
+  });
+}
+
+function simularEnvio() {
+  const dados = {
+    projeto: "MedOrganiza",
+    tipo: "simulacao",
+    medicamentos: medicamentos
+  };
+
+  document.getElementById("status").textContent =
+    "🟡 Simulação concluída — nenhuma placa conectada";
+
+  document.getElementById("resultado").textContent =
+    "Teste concluído!\n\n" +
+    medicamentos.length +
+    " medicamentos preparados para envio.\n" +
+    "Horários organizados corretamente.\n\n" +
+    "Atenção: nenhum dado foi enviado ao ESP32 físico.";
+
+  document.getElementById("json").textContent =
+    JSON.stringify(dados, null, 2);
+}
+
+function mostrarJSON() {
+  const dados = {
+    projeto: "MedOrganiza",
+    tipo: "simulacao",
+    medicamentos: medicamentos
+  };
+
+  document.getElementById("json").textContent =
+    JSON.stringify(dados, null, 2);
+}
+
+function limparTeste() {
+  document.getElementById("status").textContent =
+    "🟡 Modo de simulação — ESP32 não conectado";
+
+  document.getElementById("resultado").textContent =
+    "Aguardando teste...";
+
+  document.getElementById("json").textContent = "";
+}
+
+carregarTabela();
+</script>
+</body>
+</html>
